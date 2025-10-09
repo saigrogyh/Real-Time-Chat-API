@@ -11,9 +11,9 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type UpdateUserRequest struct {
-	Username string `json:"username" validate:"omitempty,min=3"`
-	Email    string `json:"email" validate:"omitempty,email"`
-	Password string `json:"password" validate:"omitempty,min=6"`
+type SendMessageRequest struct {
+	ChatID  uint   `json:"chat_id" validate:"required"`
+	UserID  uint   `json:"user_id" validate:"required"`
+	Content string `json:"content" validate:"required"`
 }
 

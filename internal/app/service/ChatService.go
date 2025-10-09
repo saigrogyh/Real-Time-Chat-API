@@ -1,48 +1,44 @@
 package service
 
 import (
-	// "log"
-	// . "github.com/saigrogyh/Real-Time-Chat-API/internal/app"
-	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app/repository"
 	. "github.com/saigrogyh/Real-Time-Chat-API/internal/domain"
-	"gorm.io/gorm"
+	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app/repository"
 )
 
-type ChatService struct{
+type ChatService struct {
 	repo ChatRepository
 }
 
-func CreateChat(db *gorm.DB, chat *Chat) error {
-	result := db.Create(chat)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+func NewChatService(repo ChatRepository) *ChatService {
+	return &ChatService{repo: repo}
 }
 
-func GetChat(db *gorm.DB,id uint) (*Chat,error) {
-	var chat Chat
-	result := db.First(&chat, id)
-	if result.Error != nil {
-		return nil,result.Error
-
+func (s *ChatService) CreateChat(title string) (*Chat, error) {
+	chat := &Chat{
+		Title: title,
 	}
-
-	return &chat , nil
+	err := s.repo.Create(chat)
+	return chat, err
 }
 
-func UpdateChat(db *gorm.DB, chat *Chat,id uint) error {
-	_, err := GetChat(db, id)
+func (s *ChatService) GetChatByID(id uint) (*Chat, error) {
+	return s.repo.FindById(id)
+}
+
+// func (s *ChatService) GetChatWithMessages(id uint) (*Chat, error) {
+// 	return s.repo.FindByIDWithMessages(id)
+// }
+
+
+func (s *ChatService) UpdateChat(chat *Chat) error {
+	_, err := s.repo.FindById(chat.ID)
 	if err != nil {
-		return err // ถ้าไม่เจอ chat ก็รีเทิร์นเลย
+		return err
 	}
+	return s.repo.Update(chat)
+}
 
-	result := db.Save(&chat)
 
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+func (s *ChatService) DeleteChat(id uint) error {
+	return s.repo.Delete(id)
 }

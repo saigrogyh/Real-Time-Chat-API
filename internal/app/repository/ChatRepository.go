@@ -9,6 +9,8 @@ type ChatRepository interface {
 	FindById(id uint) (*Chat, error)
 	FindAll() ([]Chat ,error)
 	Delete(id uint) error
+	Update(chat *Chat) error
+	// FindByIDWithMessages(id uint) (*Chat, error)
 }
 
 type chatRepository struct {
@@ -31,6 +33,14 @@ func (r *chatRepository) FindById(id uint) (*Chat, error) {
 	return &chat,nil
 }
 
+func (r *chatRepository) GetByIDWithMessages(id uint) (*Chat, error) {
+	var chat Chat
+	if err := r.db.Preload("Messages").First(&chat, id).Error; err != nil {
+		return nil, err
+	}
+	return &chat, nil
+}
+
 func (r *chatRepository) FindAll() ([]Chat, error) {
 	var chats []Chat
 	if err := r.db.Find(&chats).Error; err != nil {
@@ -39,6 +49,12 @@ func (r *chatRepository) FindAll() ([]Chat, error) {
 	return chats, nil
 }
 
-func (r *chatRepository) Delete(id uint) error {
-	return r.db.Delete(&User{},id).Error
+func (r *chatRepository) Update(chat *Chat) error {
+	return r.db.Save(chat).Error
 }
+
+func (r *chatRepository) Delete(id uint) error {
+	return r.db.Delete(&Chat{}, id).Error
+}
+
+
