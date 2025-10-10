@@ -29,7 +29,7 @@ func (s *MessageService) SendMessage(message *SendMessageRequest) (Message, erro
 	return *msg, nil
 }
 
-func (s *MessageService) GetMessagesByChatID(chatID uint) ([]Message, error) {
+func (s *MessageService) GetAllMessagesByChatID(chatID uint) ([]Message, error) {
 	return s.repo.GetByChatID(chatID)
 }
 

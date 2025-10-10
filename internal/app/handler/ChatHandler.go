@@ -32,7 +32,7 @@ func (h *ChatHandler) CreateChat(c *fiber.Ctx) error {
 
 func (h *ChatHandler) GetChatByChatID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	chatId, err := strconv.ParseInt(id, 10, 64)
+	chatId, err := strconv.Atoi(id)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid chat ID"})
 	}
