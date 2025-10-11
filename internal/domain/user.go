@@ -10,5 +10,5 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	Messages []Message `gorm:"foreignKey:SenderID"` // relation กับข้อความที่ส่ง
+	Messages []Message `gorm:"foreignKey:SenderID"`
 }

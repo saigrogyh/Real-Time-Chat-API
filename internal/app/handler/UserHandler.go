@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app"
 	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app/service"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/auth"
 	// "strconv"
 )
 
@@ -42,6 +43,15 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
+	token, err := auth.GenerateToken(user.ID)
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to generate token"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"token": token,
+		"user":  user,
+	})
 }
+

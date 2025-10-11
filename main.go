@@ -9,15 +9,19 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
 	// "github.com/gofiber/swagger"
 	// _ "github.com/saigrogyh/fiber-test/docs"
-	. "github.com/saigrogyh/Real-Time-Chat-API/internal/domain"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/repository"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/service"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/handler"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/auth"
+	"github.com/saigrogyh/Real-Time-Chat-API/internal/domain"
 )
 
 // var HandlerDefault = New()
 
 func main() {
-	//load .env file
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -33,14 +37,40 @@ func main() {
 
 	fmt.Println("Database connection established successfully")
 
-	fmt.Println(db)
-	// Initialize Fiber app
+	err = db.AutoMigrate(&domain.User{}, &domain.Message{}, &domain.Chat{})
+	if err != nil {
+		log.Fatal("Error during database migration:", err)
+	}
+	
+	userRepo := repository.NewUserRepository(db)
+	chatRepo := repository.NewChatRepository(db)
+	messageRepo := repository.NewMessageRepository(db)
+
+	userService := service.NewUserService(userRepo)
+	chatService := service.NewChatService(chatRepo)
+	messageService := service.NewMessageService(messageRepo)
+
+	userHandler := handler.NewUserHandler(userService)
+	chatHandler := handler.NewChatHandler(chatService)
+	messageHandler := handler.NewMessageHandler(messageService)
+
+
 	app := fiber.New()
 
-	// app.Post("/register", register)
-	// app.Get("/login", login)
+	app.Post("/register", userHandler.Register)
+	app.Post("/login", userHandler.Login)
 
-	
+	api := app.Group("/api", auth.JWTProtected())
+
+	api.Post("/chats", chatHandler.CreateChat)
+	api.Get("/chats/:id", chatHandler.GetChatByID)
+	api.Get("/chats/user/:id", chatHandler.GetChatsByUserID)
+	api.Get("/chats", chatHandler.GetAllChats)
+
+	api.Post("/messages", messageHandler.SendMessage)
+	api.Get("/chats/:id/messages", messageHandler.GetAllMsgFromChatID)
+	api.Get("/users/:id/messages", messageHandler.GetMessagesByUserID)
+
 	// Swagger documentation
 	// app.Get("/swagger/*", swagger.HandlerDefault)
 
@@ -48,5 +78,5 @@ func main() {
 	port := os.Getenv("APP_PORT")
 	app.Listen(":"+port)
 
-	db.AutoMigrate(&Chat{}, &User{})
+	
 }
