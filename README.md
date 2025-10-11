@@ -1,4 +1,4 @@
-#  Realtime Chat API (In-Progress)
+# 💬 Realtime Chat API (In-Progress)
 
 This project is a **Realtime Chat Backend** built with **Go**, designed to demonstrate clean backend design and scalable structure for chat applications.
 
@@ -18,7 +18,7 @@ The backend currently supports **JWT authentication**, **user management**, and 
 
 ---
 
-##  Project Structure
+## 🧱 Project Structure
 
 ```
 internal/
@@ -38,7 +38,7 @@ cmd/
 
 ---
 
-##  Features
+## 🧩 Features
 
 - **User Registration & Login** with password hashing (`bcrypt`)  
 - **JWT-based Authentication** for secure API access  
@@ -48,7 +48,7 @@ cmd/
 
 ---
 
-##  Getting Started
+## 🚀 Getting Started
 
 ### 1. Clone the repository
 
