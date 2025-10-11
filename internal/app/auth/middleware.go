@@ -9,7 +9,7 @@ func JWTProtected() fiber.Handler {
 	return jwtware.New(jwtware.Config{
 		SigningKey:   []byte("JWT_SECRET"),
 		ErrorHandler: jwtError,
-		ContextKey:   "user", // เก็บข้อมูล token ใน c.Locals("user")
+		ContextKey:   "user",
 	})
 }
 
