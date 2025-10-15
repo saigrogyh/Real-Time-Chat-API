@@ -5,16 +5,18 @@ import (
 		"time"
 	)
 
-var jwtSecret = []byte("JWT_SECRET")
+// internal/app/auth/Jwt.go
 
+// ลบ var jwtSecret = []byte("JWT_SECRET") ทิ้งไป
 
-func GenerateToken(userId uint) (string, error) {
-	claims := jwt.MapClaims{
-		"user_id": userId,
-		"exp":	 time.Now().Add(72 * time.Hour).Unix(),
-	}
+// แก้ไขฟังก์ชันให้รับ secret
+func GenerateToken(userId uint, secret string) (string, error) {
+    claims := jwt.MapClaims{
+        "user_id": userId,
+        "exp":	 time.Now().Add(72 * time.Hour).Unix(),
+    }
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(jwtSecret)
+    return token.SignedString([]byte(secret)) // ใช้ secret ที่รับมา
 }

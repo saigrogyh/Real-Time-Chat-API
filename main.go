@@ -25,6 +25,10 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	jwtSecret := os.Getenv("JWT_SECRET")
+    if jwtSecret == "" {
+        log.Fatal("JWT_SECRET is not set in .env file")
+    }
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("CHATDB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
@@ -62,7 +66,7 @@ func main() {
 	app.Post("/login", userHandler.Login)
 
 	// Group protected routes with JWT middleware
-	api := app.Group("/api", auth.JWTProtected())
+	api := app.Group("/api", auth.JWTProtected(jwtSecret)) 
 
 	// Chat routes
 	api.Post("/chats", chatHandler.CreateChat)

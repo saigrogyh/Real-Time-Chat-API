@@ -3,14 +3,14 @@ package auth
 import (
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
-)
+)	
 
-func JWTProtected() fiber.Handler {
-	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte("JWT_SECRET"),
-		ErrorHandler: jwtError,
-		ContextKey:   "user",
-	})
+func JWTProtected(secret string) fiber.Handler {
+    return jwtware.New(jwtware.Config{
+        SigningKey:   []byte(secret),
+        ErrorHandler: jwtError,
+        ContextKey:   "user",
+    })
 }
 
 func jwtError(c *fiber.Ctx, err error) error {

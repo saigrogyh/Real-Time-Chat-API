@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"os"
+	"log"
 	"github.com/gofiber/fiber/v2"
 	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app"
 	. "github.com/saigrogyh/Real-Time-Chat-API/internal/app/service"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/auth"
-	// "strconv"
+	"github.com/joho/godotenv"
 )
 
 type UserHandler struct {
@@ -43,7 +45,16 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	token, err := auth.GenerateToken(user.ID)
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	jwtSecret := os.Getenv("JWT_SECRET")
+    if jwtSecret == "" {
+        log.Fatal("JWT_SECRET is not set in .env file")
+    }
+
+	token, err := auth.GenerateToken(user.ID,jwtSecret)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to generate token"})
