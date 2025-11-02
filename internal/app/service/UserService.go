@@ -31,7 +31,7 @@ func (s *UserService) Register(r RegisterRequest) error {
 }
 
 func (s *UserService) Login(r LoginRequest) (*User, error) {
-	user, err := s.repo.FindByUsername(r.Email)
+	user, err := s.repo.FindByEmail(r.Email)
 	if err != nil {
 		return nil, err
 	}

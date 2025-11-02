@@ -9,6 +9,7 @@ type UserRepository interface {
 	FindByUsername(username string) (*User, error)
 	FindByid(id uint) (*User, error)
 	FindAll() ([]User, error)
+	FindByEmail(email string) (*User, error)
 	Update(user *User) error
 	Delete(id uint) error
 }
@@ -29,6 +30,14 @@ func (r *userRepository) FindByUsername(username string) (*User, error) {
 	var user User
 	if err := r.db.Where("username = ?",username).First(&user).Error; err != nil{
 		return nil, err
+	}
+	return &user,nil
+}
+
+func (r *userRepository) FindByEmail(email string) (*User, error){
+	var user User
+	if err := r.db.Where("email = ?",email).First(&user).Error;err != nil{
+		return nil,err
 	}
 	return &user,nil
 }

@@ -9,17 +9,12 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-
-	// "github.com/gofiber/swagger"
-	// _ "github.com/saigrogyh/fiber-test/docs"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/auth"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/handler"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/repository"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/app/service"
 	"github.com/saigrogyh/Real-Time-Chat-API/internal/domain"
 )
-
-// var HandlerDefault = New()
 
 func main() {
 	if err := godotenv.Load(); err != nil {

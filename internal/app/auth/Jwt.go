@@ -5,11 +5,7 @@ import (
 		"time"
 	)
 
-// internal/app/auth/Jwt.go
 
-// ลบ var jwtSecret = []byte("JWT_SECRET") ทิ้งไป
-
-// แก้ไขฟังก์ชันให้รับ secret
 func GenerateToken(userId uint, secret string) (string, error) {
     claims := jwt.MapClaims{
         "user_id": userId,
